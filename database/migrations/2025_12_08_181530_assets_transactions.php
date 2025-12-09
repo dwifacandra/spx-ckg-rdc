@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('assets_transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('ops_id')->unique();
+            $table->string('ops_id');
             $table->foreignId('asset_id')->constrained()->cascadeOnDelete();
             $table->timestamp('check_in')->useCurrent();
             $table->timestamp('check_out')->nullable();

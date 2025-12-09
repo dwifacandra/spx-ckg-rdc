@@ -1,67 +1,57 @@
-# Asset Transaction Routes Implementation
+# Plan: Update Detail Asset Layout
 
-## Task Completed ✅
+## Information Gathered
 
-### 1. Route Configuration
+-   Current implementation has a "Detail Asset" section showing asset details in a grid format
+-   New design requires a two-part layout:
+    -   Top: Transaction ID and Status (green/red based on success)
+    -   Bottom: Two columns - "detail asset" and "detail ops"
+-   Current Livewire component has: opsId, assetCode, selectedAsset properties
+-   Need to add: transactionId, isSuccess, operatorName, checkInTime properties
 
--   Created nested route structure in `routes/web.php`
--   Added authenticated middleware protection
--   Route structure:
-    -   `/assets/transactions` → Transaction logs (Index)
-    -   `/assets/transactions/checkin` → Check-in functionality
-    -   `/assets/transactions/checkout` → Check-out functionality
--   Updated route components to use new structure: `assets.transactions.*`
+## Plan
 
-### 6. Livewire Component Restructuring
+1. Update Livewire component (CheckIn.php):
 
--   Moved components from `app/Livewire/AssetTransactions/` to `app/Livewire/Assets/Transactions/`
--   Updated namespaces from `App\Livewire\AssetTransactions` to `App\Livewire\Assets\Transactions`
--   Moved view files from `resources/views/livewire/asset-transactions/` to `resources/views/livewire/assets/transactions/`
--   Updated view paths in components from `livewire.asset-transactions.*` to `livewire.assets.transactions.*`
--   Removed old empty directories: `app/Livewire/AssetTransactions/` and `resources/views/livewire/asset-transactions/`
+    - Add new properties: transactionId, isSuccess, operatorName, checkInTime
+    - Update save() method to set these new properties
+    - Update render() method to pass these properties to the view
 
-### 7. Component Separation
+2. Update view (check-in.blade.php):
+    - Replace the Asset Details Section (@if($selectedAsset)) with new layout
+    - Implement the new two-part structure as specified
+    - Keep existing form and recent transactions sections
 
--   Split `CheckInCheckOut` component into two separate components:
-    -   `CheckIn.php` - for asset check-in functionality
-    -   `CheckOut.php` - for asset check-out functionality
--   Created corresponding view files:
-    -   `check-in.blade.php` - view for check-in page
-    -   `check-out.blade.php` - view for check-out page
--   Removed combined component: `check-in-check-out.blade.php`
--   Updated routes to use separate components:
-    -   `assets.transactions.check-in` → CheckIn component
-    -   `assets.transactions.check-out` → CheckOut component
+## Dependent Files to be edited
 
-### 2. Sidebar Navigation
+-   app/Livewire/Assets/Transactions/CheckIn.php
+-   resources/views/livewire/assets/transactions/check-in.blade.php
 
--   Updated sidebar navigation in `resources/views/components/layouts/app/sidebar.blade.php`
--   Connected menu items to proper route names
--   Added active state highlighting for current route
--   Included proper Laravel route helpers and navigation
+## Followup steps
 
-### 3. Route Names
+-   Test the updated layout
+-   Verify the success/failure status logic works correctly
 
--   `assets.transactions.index` - Transaction logs
--   `assets.transactions.checkin` - Check-in page
--   `assets.transactions.checkout` - Check-out page
+## Status: ✅ CHECK-IN FUNCTION FIXED
 
-## Files Modified
+## Completed Tasks:
 
--   `routes/web.php` - Added asset transaction routes
--   `resources/views/components/layouts/app/sidebar.blade.php` - Added navigation items
-
-### 4. Database & Model Fixes
-
--   Fixed AssetTransaction model to use correct table name `assets_transactions`
--   Verified database table exists and is accessible
--   Confirmed all migrations run successfully
-
-### 5. Route Verification
-
--   All asset transaction routes are working correctly:
-    -   `GET|HEAD assets/transactions` → `assets.transactions.index`
-    -   `GET|HEAD assets/transactions/checkin` → `assets.transactions.checkin`
-    -   `GET|HEAD assets/transactions/checkout` → `assets.transactions.checkout`
-
-## Status: COMPLETED ✅
+-   ✅ Added new properties to Livewire component (transactionId, isSuccess, operatorName, checkInTime)
+-   ✅ Updated save() method to set new properties with proper logic
+-   ✅ Replaced Asset Details Section with new two-part layout
+-   ✅ Implemented transaction ID and status section with conditional coloring
+-   ✅ Implemented detail asset and detail ops columns
+-   ✅ Connected all Livewire properties to the view
+-   ✅ Replaced Session Messages section with the status box for success/failure display
+-   ✅ Swapped column order: "detail ops" now on left, "detail asset" on right
+-   ✅ Fixed status logic: "Waiting for scan" when no input, "Failed" when asset not found, "Check in" when successful
+-   ✅ Added statusMessage property and proper state management
+-   ✅ Reset to initial state after form clearing
+-   ✅ Removed background for "Waiting for scan" state (no background, only text)
+-   ✅ Changed "transaksi id" to "datetime check in" with current time display
+-   ✅ Changed transaction status from "checked in" to "in use" (matching enum)
+-   ✅ Added logic to fail when asset status is already "in use"
+-   ✅ Updated success status message to "in use" for consistency
+-   ✅ Added asset status update when transaction is successful
+-   ✅ Added failureReason property to show detailed error messages
+-   ✅ Added failure reason display in status box when Failed
