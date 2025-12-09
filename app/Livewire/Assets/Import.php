@@ -101,7 +101,7 @@ class Import extends Component
 
             Cache::forget("import_stats_{$this->batchId}");
 
-            $message = "Import **Selesai!** Berhasil: **{$this->successfulCount}**, Gagal: **{$this->failedCount}**, Total: **{$total}**.";
+            $message = "Import Selesai! (Berhasil: {$this->successfulCount}, Gagal: {$this->failedCount}, Total: {$total})";
 
             session()->flash('import_status', $message);
             $this->dispatch('refresh');
