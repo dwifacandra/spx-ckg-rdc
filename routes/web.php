@@ -33,12 +33,14 @@ Route::middleware(['auth'])->group(function () {
 
     Volt::route('assets', 'assets.index')->name('assets.index');
 
+
     // Asset Transactions Routes
     Route::prefix('assets')->name('assets.')->group(function () {
         Route::prefix('transactions')->name('transactions.')->group(function () {
-            Volt::route('/', 'asset-transactions.index')->name('index');
-            Volt::route('checkin', 'asset-transactions.check-in-check-out')->name('checkin');
-            Volt::route('checkout', 'asset-transactions.check-in-check-out')->name('checkout');
+            Volt::route('/', 'assets.transactions.index')->name('index');
+
+            Volt::route('checkin', 'assets.transactions.check-in')->name('checkin');
+            Volt::route('checkout', 'assets.transactions.check-out')->name('checkout');
         });
     });
 

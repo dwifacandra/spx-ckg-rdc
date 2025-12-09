@@ -58,7 +58,7 @@
                             :href="route('assets.transactions.index')"
                             :current="request()->routeIs('assets.transactions.index')"
                             wire:navigate
-                            >{{ __("Transaction Logs") }}</flux:sidebar.item
+                            >{{ __("Logs") }}</flux:sidebar.item
                         >
                     </flux:sidebar.group>
                 </flux:sidebar.group>

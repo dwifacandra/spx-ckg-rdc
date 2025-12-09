@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Livewire\AssetTransactions;
+
+namespace App\Livewire\Assets\Transactions;
 
 use Livewire\Component;
 use App\Models\AssetTransaction;
@@ -80,7 +81,8 @@ class Index extends Component
             'overdue' => AssetTransaction::where('status', 'overtime')->whereNull('check_out')->count(),
         ];
 
-        return view('livewire.asset-transactions.index', [
+
+        return view('livewire.assets.transactions.index', [
             'transactions' => $transactions,
             'stats' => $stats
         ]);
