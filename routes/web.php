@@ -30,7 +30,17 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
+
     Volt::route('assets', 'assets.index')->name('assets.index');
+
+    // Asset Transactions Routes
+    Route::prefix('assets')->name('assets.')->group(function () {
+        Route::prefix('transactions')->name('transactions.')->group(function () {
+            Volt::route('/', 'asset-transactions.index')->name('index');
+            Volt::route('checkin', 'asset-transactions.check-in-check-out')->name('checkin');
+            Volt::route('checkout', 'asset-transactions.check-in-check-out')->name('checkout');
+        });
+    });
 
     // Route for downloading failed imports report
     Route::get('/download-failed-imports/{filename}', function ($filename) {

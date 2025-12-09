@@ -114,13 +114,13 @@ class ImportAssets implements ShouldQueue
                 continue;
             }
 
+
             if (in_array($code, $importedCodes)) {
                 $this->logError($rowData, "Kode {$code} adalah duplikat di dalam file impor ini.", 'FILE_DUPLICATE');
                 $this->failedRows++;
                 continue;
             }
             $importedCodes[] = $code;
-
             $rowData['created_at'] = $now;
             $rowData['updated_at'] = $now;
             $batchData[] = $rowData;
