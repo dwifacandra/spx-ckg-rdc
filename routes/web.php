@@ -31,4 +31,15 @@ Route::middleware(['auth'])->group(function () {
         ->name('two-factor.show');
 
     Volt::route('assets', 'assets.index')->name('assets.index');
+
+    // Route for downloading failed imports report
+    Route::get('/download-failed-imports/{filename}', function ($filename) {
+        $path = storage_path("app/temp/{$filename}");
+
+        if (file_exists($path)) {
+            return response()->download($path)->deleteFileAfterSend(true);
+        }
+
+        abort(404);
+    })->name('download.failed.imports');
 });

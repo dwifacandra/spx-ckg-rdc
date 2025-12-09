@@ -41,7 +41,7 @@
             </div>
 
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white dark:bg-gray-800">
+                <table class="min-w-full bg-white dark:bg-gray-800" wire:poll>
                     <thead class="bg-gray-50 dark:bg-gray-700">
                         <tr>
                             <th
