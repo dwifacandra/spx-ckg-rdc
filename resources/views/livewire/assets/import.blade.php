@@ -8,20 +8,15 @@
 
             {{-- 1. NOTIFIKASI DAN LAPORAN GAGAL (Setelah Import Selesai) --}}
             @if (session()->has('import_status') && !$isImporting)
-            <div
-                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded"
-                role="alert"
-            >
+            <div {{-- DARK MODE APPLIED: Latar belakang hijau gelap, teks hijau terang --}}
+                class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded dark:bg-green-900/30 dark:border-green-800 dark:text-green-300"
+                role="alert">
                 {!! session('import_status') !!} @if ($failedCount > 0 &&
                 $failedFileName)
                 <div class="mt-2">
-                    <flux:button
-                        size="sm"
-                        variant="outline"
-                        icon="arrow-down-tray"
-                        wire:click="downloadFailedReport"
-                        class="bg-white hover:bg-gray-100"
-                    >
+                    <flux:button size="sm" variant="outline" icon="arrow-down-tray" wire:click="downloadFailedReport"
+                        {{-- DARK MODE APPLIED: Tombol Download disesuaikan --}}
+                        class="bg-white hover:bg-gray-100 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:text-white dark:border-zinc-600">
                         Download Failed Report ({{ $failedCount }} records)
                     </flux:button>
                 </div>
@@ -39,14 +34,16 @@
             @elseif ($isImporting)
             {{-- PENTING: wire:poll memastikan progress terupdate setiap detik --}}
             <div class="space-y-4" wire:poll.1000ms="checkProgress">
-                <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div
-                        class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
-                        style="width: {{ $this->progressWidth }}"
-                    ></div>
+                {{-- DARK MODE APPLIED: Latar belakang progress bar --}}
+                <div class="w-full bg-neutral-200 dark:bg-zinc-700 rounded-full h-2.5">
+                    {{-- Catatan: Warna BLUE pada progress bar (bg-blue-600) tidak diubah, namun Anda bisa mengubahnya
+                    menjadi warna Primary Anda jika diinginkan --}}
+                    <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                        style="width: {{ $this->progressWidth }}"></div>
                 </div>
 
-                <div class="text-center text-sm text-gray-600">
+                {{-- DARK MODE APPLIED: Teks persentase --}}
+                <div class="text-center text-sm text-gray-600 dark:text-neutral-400">
                     Importing... {{ round($this->progress) }}%
                 </div>
             </div>
@@ -63,9 +60,7 @@
                 <flux:modal.close>
                     <flux:button variant="ghost">Cancel</flux:button>
                 </flux:modal.close>
-                <flux:button type="submit" variant="primary"
-                    >Import</flux:button
-                >
+                <flux:button type="submit" variant="primary">Import</flux:button>
             </div>
             @endif
         </div>
