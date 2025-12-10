@@ -129,7 +129,7 @@ class CheckIn extends Component
         if (!$this->selectedAsset) return null;
 
         $activeTransactionQuery = $this->selectedAsset->transactions()
-            ->whereNull('check_out')
+            ->whereNull('check_in')
             ->where(function ($query) {
                 // Status aktif yang memerlukan Check In
                 $query->where('status', 'in use')
@@ -145,7 +145,7 @@ class CheckIn extends Component
         try {
             DB::transaction(function () use ($activeTransaction, $remark) {
                 // A. Update Transaksi Aktif (Tabel asset_transactions)
-                $activeTransaction->check_out = now();
+                $activeTransaction->check_in = now();
                 $activeTransaction->status = 'complete';
 
                 if ($remark !== null) {

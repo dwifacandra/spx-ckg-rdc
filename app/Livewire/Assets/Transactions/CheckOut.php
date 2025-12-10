@@ -74,6 +74,7 @@ class CheckOut extends Component
                 AssetTransaction::create([
                     'asset_id' => $this->selectedAsset->id,
                     'ops_id' => $this->opsId,
+                    'check_out' => now(),
                     'status' => 'in use', // Status transaksi: Sedang dipinjam
                     'created_by' => auth()->id(),
                 ]);

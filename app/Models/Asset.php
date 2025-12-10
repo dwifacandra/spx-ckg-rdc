@@ -38,7 +38,7 @@ class Asset extends Model
     {
         return $this->transactions()
             ->where('status', 'in use')
-            ->whereNull('check_out')
+            ->whereNull('check_in')
             ->first();
     }
 
@@ -55,6 +55,6 @@ class Asset extends Model
      */
     public function isAvailable(): bool
     {
-        return is_null($this->activeTransaction()) && $this->status === 'available';
+        return is_null($this->activeTransaction()) && $this->status === 'complete';
     }
 }

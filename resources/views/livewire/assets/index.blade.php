@@ -20,7 +20,7 @@
                 <div class="flex-1">
                     <flux:input
                         icon="magnifying-glass"
-                        placeholder="Search orders"
+                        placeholder="Search Assets"
                         wire:model.live="search"
                     />
                 </div>

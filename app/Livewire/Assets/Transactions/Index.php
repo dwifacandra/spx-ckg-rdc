@@ -14,7 +14,7 @@ class Index extends Component
 
     public string $search = '';
     public string $statusFilter = '';
-    public string $sortField = 'check_in';
+    public string $sortField = 'check_out';
     public string $sortDirection = 'desc';
 
     protected $queryString = [
@@ -49,7 +49,7 @@ class Index extends Component
     public function resetFilters()
     {
         $this->reset(['search', 'statusFilter']);
-        $this->sortField = 'check_in';
+        $this->sortField = 'check_out';
         $this->sortDirection = 'desc';
     }
 
