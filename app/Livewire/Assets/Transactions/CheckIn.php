@@ -114,8 +114,6 @@ class CheckIn extends Component
         if ($activeTransaction->ops_id !== $this->opsId) {
             $this->statusMessage = 'OPS ID Mismatch';
             $this->failureReason = 'Asset [' . $this->assetCode . '] dipinjam oleh OPS ID: ' . $activeTransaction->ops_id . '. Mohon scan atau masukkan OPS ID yang sesuai.';
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
-            $this->dispatch('focus-ops-id');
             return;
         }
 
@@ -129,6 +127,7 @@ class CheckIn extends Component
         if (!$this->selectedAsset) return null;
 
         $activeTransactionQuery = $this->selectedAsset->transactions()
+            ->whereNotNull('check_out')
             ->whereNull('check_in')
             ->where(function ($query) {
                 // Status aktif yang memerlukan Check In
@@ -149,7 +148,7 @@ class CheckIn extends Component
                 $activeTransaction->status = 'complete';
 
                 if ($remark !== null) {
-                    $activeTransaction->remark = $remark;
+                    $activeTransaction->remarks = $remark;
                 }
 
                 $activeTransaction->save();
