@@ -5,7 +5,6 @@ namespace App\Livewire\Assets;
 use App\Models\Asset;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Livewire\WithFileUploads;
 
 class Index extends Component
 {
@@ -79,9 +78,9 @@ class Index extends Component
         $assets = Asset::query()
             ->when($this->search, function ($query) {
                 $query->where('item', 'like', '%' . $this->search . '%')
-                      ->orWhere('code', 'like', '%' . $this->search . '%')
-                      ->orWhere('tag', 'like', '%' . $this->search . '%')
-                      ->orWhere('serial_number', 'like', '%' . $this->search . '%');
+                    ->orWhere('code', 'like', '%' . $this->search . '%')
+                    ->orWhere('tag', 'like', '%' . $this->search . '%')
+                    ->orWhere('serial_number', 'like', '%' . $this->search . '%');
             })
             ->paginate(10);
 

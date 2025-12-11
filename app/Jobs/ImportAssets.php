@@ -21,11 +21,9 @@ class ImportAssets implements ShouldQueue
     private $filePath;
     private $delimiter;
     private $disk;
-
     private int $processedRows = 0;
     private int $failedRows = 0;
     private array $errorData = [];
-    // Properti $batchId dihapus karena sudah disediakan oleh trait Batchable.
 
     public function __construct(string $filePath, string $delimiter = ';', string $disk = 'local')
     {
@@ -40,7 +38,6 @@ class ImportAssets implements ShouldQueue
 
     public function handle(): void
     {
-        // Mendapatkan ID batch saat ini
         $currentBatchId = $this->batch() ? $this->batch()->id : null;
 
         try {
@@ -70,7 +67,6 @@ class ImportAssets implements ShouldQueue
             'ownership'
         ];
 
-        // Lewati header
         fgetcsv($fileHandle, 0, $this->delimiter);
 
         $cleanAndNullify = function ($value) {
@@ -78,7 +74,6 @@ class ImportAssets implements ShouldQueue
             return empty($cleaned) ? null : $cleaned;
         };
 
-        // --- Proses Pembacaan Data ---
         while (($row = fgetcsv($fileHandle, 0, $this->delimiter)) !== false) {
             $lineCount++;
             $this->processedRows++;
@@ -137,7 +132,6 @@ class ImportAssets implements ShouldQueue
 
         fclose($fileHandle);
 
-        // Hapus file yang diupload
         Storage::disk($this->disk)->delete($this->filePath);
 
         $generatedFailedFileName = null;
@@ -146,7 +140,6 @@ class ImportAssets implements ShouldQueue
             $this->createFailedReport($generatedFailedFileName);
         }
 
-        // PENYIMPANAN STATISTIK DAN NAMA FILE GAGAL KE CACHE GLOBAL
         if ($currentBatchId) {
             $stats = [
                 'processed'         => $this->processedRows,
@@ -159,18 +152,15 @@ class ImportAssets implements ShouldQueue
         }
     }
 
-    // --- Metode Pembuatan Laporan Kegagalan (Memperbaiki ArgumentCountError) ---
 
     protected function createFailedReport(string $fileName): void
     {
-        // 1. Buat file temporary di sistem untuk menulis CSV
         $tempFile = tempnam(sys_get_temp_dir(), 'csv');
         $handle = fopen($tempFile, 'w');
 
         $headers = array_keys($this->errorData[0] ?? ['Code', 'Item', 'Reason', 'ErrorType']);
         fputcsv($handle, $headers);
 
-        // 2. Tulis data kegagalan ke temporary stream
         foreach ($this->errorData as $row) {
             $outputRow = [];
             foreach ($headers as $header) {
@@ -179,15 +169,12 @@ class ImportAssets implements ShouldQueue
             fputcsv($handle, $outputRow);
         }
 
-        // Tutup stream dan dapatkan konten mentah file
         fclose($handle);
         $contents = file_get_contents($tempFile);
 
-        // 3. Simpan konten ke disk Laravel menggunakan Storage::put()
         $filePath = "temp/{$fileName}";
 
         try {
-            // Menggunakan put() daripada writeStream($path)
             Storage::disk('local')->put($filePath, $contents);
             unlink($tempFile);
         } catch (Throwable $e) {
@@ -198,14 +185,11 @@ class ImportAssets implements ShouldQueue
         }
     }
 
-    // --- Metode Pemrosesan Error Database ---
-
     protected function insertChunk(array $chunkData, int $currentLineCount): void
     {
         try {
             DB::table('assets')->insert($chunkData);
         } catch (Throwable $e) {
-            // Jika chunk gagal, coba masukkan satu per satu untuk mengidentifikasi baris yang bermasalah
             foreach ($chunkData as $rowData) {
                 try {
                     DB::table('assets')->insert($rowData);
@@ -213,7 +197,6 @@ class ImportAssets implements ShouldQueue
                     $this->failedRows++;
                     $errorMessage = $singleInsertException->getMessage();
                     $errorType = $this->getErrorType($errorMessage);
-                    // Panggil logError dengan flag TRUE untuk memberitahu bahwa ini error DB
                     $this->logError($rowData, $errorMessage, $errorType, true);
                 }
             }
@@ -234,11 +217,8 @@ class ImportAssets implements ShouldQueue
         return 'DATABASE_CONSTRAINT_ERROR';
     }
 
-    // --- Metode Pembersihan Pesan Error (Friendly Reason) ---
-
     protected function getFriendlyErrorMessage(string $sqlError): string
     {
-        // DUPLICATE ENTRY ERROR
         if (str_contains($sqlError, 'Duplicate entry')) {
             if (preg_match("/Duplicate entry '([^']+)' for key '([^']+)'/", $sqlError, $matches)) {
                 $duplicateValue = $matches[1];
@@ -246,8 +226,6 @@ class ImportAssets implements ShouldQueue
             }
             return "Terjadi duplikasi data yang melanggar batasan unik.";
         }
-
-        // DATA TRUNCATED ERROR
         if (str_contains($sqlError, 'Data truncated for column')) {
             if (preg_match("/Data truncated for column '([^']+)'/", $sqlError, $matches)) {
                 $columnName = $matches[1];
@@ -256,18 +234,15 @@ class ImportAssets implements ShouldQueue
             return "Nilai data terlalu panjang atau tidak sesuai tipe (ENUM/panjang).";
         }
 
-        // MISSING REQUIRED DATA
         if (str_contains($sqlError, 'cannot be null')) {
             return "Terdapat kolom wajib (NOT NULL) yang dibiarkan kosong.";
         }
 
-        // DEFAULT FALLBACK
         return "Terjadi kesalahan database tak terduga: " . substr($sqlError, 0, 100) . "...";
     }
 
     protected function logError(array $rowData, string $errorReason, string $errorType, bool $isDbError = false): void
     {
-        // Bersihkan pesan error jika berasal dari SQL
         if ($isDbError) {
             $friendlyReason = $this->getFriendlyErrorMessage($errorReason);
         } else {
@@ -281,11 +256,10 @@ class ImportAssets implements ShouldQueue
 
         Log::error('Asset Import Failed', $logData);
 
-        // Simpan data kegagalan untuk laporan CSV
         $this->errorData[] = [
             'Code' => $rowData['code'] ?? 'N/A',
             'Item' => $rowData['item'] ?? 'N/A',
-            'Reason' => $friendlyReason, // Menggunakan pesan yang ramah pengguna
+            'Reason' => $friendlyReason,
             'ErrorType' => $errorType,
         ];
     }

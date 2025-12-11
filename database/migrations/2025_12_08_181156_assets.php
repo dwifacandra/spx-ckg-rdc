@@ -12,10 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('assets', function (Blueprint $table) {
-            $table->id();
+            $table->string('code')->primary();
             $table->string('item');
             $table->string('brand')->nullable();
-            $table->string('code')->unique()->nullable();
             $table->string('type')->nullable();
             $table->string('tag')->nullable();
             $table->string('serial_number')->unique()->nullable();

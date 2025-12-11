@@ -5,6 +5,7 @@ namespace App\Livewire\Assets\Transactions;
 use App\Models\Asset;
 use Livewire\Component;
 use App\Models\AssetTransaction;
+use App\Models\Employee;
 use Illuminate\Support\Facades\DB;
 
 class CheckOut extends Component
@@ -12,6 +13,7 @@ class CheckOut extends Component
     public string $opsId = '';
     public string $assetCode = '';
     public ?Asset $selectedAsset = null;
+    public ?Employee $selectedEmployee = null;
     public string $statusMessage = 'Waiting for scan';
     public string $failureReason = '';
 
@@ -30,9 +32,27 @@ class CheckOut extends Component
 
     public function updatedOpsId($value)
     {
-        // Clean and capitalize the input
         $this->opsId = $this->cleanAndCapitalize($value);
-        $this->checkAutoSubmit();
+
+        if ($this->opsId) {
+            $pattern = '/^OPS[0-9]+$/';
+            $employee = Employee::where('ops_id', $this->opsId)->first();
+
+            if ($employee) {
+                $this->selectedEmployee = $employee;
+            } elseif (preg_match($pattern, $this->opsId)) {
+                $this->selectedEmployee = Employee::create([
+                    'ops_id' => $this->opsId,
+                    'staff_name' => '[NOT RECORDED]',
+                    'ops_status' => 'temperory',
+                ]);
+            } else {
+                $this->selectedEmployee = null;
+            }
+            $this->checkAutoSubmit();
+        } else {
+            $this->selectedEmployee = null;
+        }
     }
 
     public function checkAutoSubmit()

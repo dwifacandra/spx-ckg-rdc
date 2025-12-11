@@ -9,77 +9,56 @@
         </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    {{-- Container utama yang disederhanakan agar lebih sesuai dengan konteks dashboard --}}
+    <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6 p-6">
+        <div class="row-gap-8 grid grid-cols-2 md:grid-cols-4">
 
-        {{-- Card 1: Total --}}
-        <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm rounded-lg">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-semibold">{{ $stats["total"] }}</span>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-sm font-medium text-gray-500 dark:text-neutral-400">
-                            Total Transactions
-                        </h3>
-                    </div>
+            {{-- Statistik 1: Total Transactions --}}
+            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
+                <div
+                    class="font-heading text-2xl font-bold text-blue-600 dark:text-blue-400 lg:text-3xl xl:text-4xl truncate">
+                    {{ $stats["total"] }}
                 </div>
+                <p
+                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
+                    Total Transactions
+                </p>
             </div>
-        </div>
 
-        {{-- Card 2: In Use --}}
-        <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm rounded-lg">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-semibold">{{ $stats["active"] }}</span>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-sm font-medium text-gray-500 dark:text-neutral-400">
-                            Currently In Use
-                        </h3>
-                    </div>
+            {{-- Statistik 2: Currently In Use --}}
+            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
+                <div
+                    class="font-heading text-2xl font-bold text-green-600 dark:text-green-400 lg:text-3xl xl:text-4xl truncate">
+                    {{ $stats["active"] }}
                 </div>
+                <p
+                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
+                    Currently In Use
+                </p>
             </div>
-        </div>
 
-        {{-- Card 3: Completed --}}
-        <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm rounded-lg">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-gray-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-semibold">{{ $stats["complete"] }}</span>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-sm font-medium text-gray-500 dark:text-neutral-400">
-                            Completed
-                        </h3>
-                    </div>
+            {{-- Statistik 3: Completed --}}
+            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
+                <div
+                    class="font-heading text-2xl font-bold text-gray-700 dark:text-gray-300 lg:text-3xl xl:text-4xl truncate">
+                    {{ $stats["complete"] }}
                 </div>
+                <p
+                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
+                    Completed
+                </p>
             </div>
-        </div>
 
-        {{-- Card 4: Overdue --}}
-        <div class="bg-white dark:bg-neutral-800 overflow-hidden shadow-sm rounded-lg">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
-                            <span class="text-white font-semibold">{{ $stats["overdue"] }}</span>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <h3 class="text-sm font-medium text-gray-500 dark:text-neutral-400">
-                            Overdue
-                        </h3>
-                    </div>
+            {{-- Statistik 4: Overdue --}}
+            <div class="mb-6 text-center md:mb-0">
+                <div
+                    class="font-heading text-2xl font-bold text-red-600 dark:text-red-400 lg:text-3xl xl:text-4xl truncate">
+                    {{ $stats["overdue"] }}
                 </div>
+                <p
+                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
+                    Overdue
+                </p>
             </div>
         </div>
     </div>
@@ -134,6 +113,10 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
+                            Check Out
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
                             <button wire:click="sortBy('check_in')"
                                 class="group inline-flex items-center space-x-1 hover:text-gray-900 dark:hover:text-white">
                                 <span>Check In</span>
@@ -146,15 +129,15 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
-                            Check Out
-                        </th>
-                        <th scope="col"
-                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
                             Duration
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
                             Status
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
+                            Issue
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 tracking-wider">
@@ -166,30 +149,33 @@
                 {{-- TABLE BODY --}}
                 <tbody class="bg-white dark:bg-neutral-800 divide-y divide-gray-200 dark:divide-neutral-700">
                     @forelse ($transactions as $transaction)
-                    {{-- HOVER ROW: Menggunakan dark:hover:bg-neutral-700 --}}
                     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                            {{ $transaction->ops_id }}
-                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center">
-                                <div>
-                                    <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                        {{ $transaction->asset->item }}
-                                    </div>
-                                    <div class="text-sm text-gray-500 dark:text-neutral-400">
-                                        {{ $transaction->asset->brand }} -
-                                        {{ $transaction->asset->code }}
-                                    </div>
+                            <div class="flex flex-col">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->ops_id }}
                                 </div>
+                                <div>
+                                    <span
+                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->ops_profile->staff_name }}
+                                    </span>
+                                </div>
+
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            @if ($transaction->check_in)
-                            {{ $transaction->check_in->format('d/m/Y H:i:s') }}
-                            @else
-                            <span class="text-gray-400">-</span>
-                            @endif
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col space-y-1">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->asset->code }}
+                                </div>
+                                <div>
+                                    <span
+                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->asset->serial_number }}
+                                    </span>
+                                </div>
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             @if ($transaction->check_out)
@@ -199,10 +185,20 @@
                             @endif
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->getDurationInHours() }}
+                            @if ($transaction->check_in)
+                            {{ $transaction->check_in->format('d/m/Y H:i:s') }}
+                            @else
+                            <span class="text-gray-400">-</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            <div class="flex items-center space-x-2">
+                                <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+
+                                <span>{{ $transaction->getDurationInHours() }}</span>
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{-- BADGE STATUS: Menggunakan skema warna yang sama untuk kontras --}}
                             @if ($transaction->status === 'complete')
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
@@ -219,6 +215,9 @@
                                 Overdue
                             </span>
                             @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                            {{ $transaction->remarks }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             {{ $transaction->user->email }}
