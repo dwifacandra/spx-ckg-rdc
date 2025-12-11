@@ -72,7 +72,7 @@
                         OPS ID
                     </dt>
                     <dd class="flex-1 text-gray-600 dark:text-neutral-400">
-                        : {{ $opsId ?: null }}
+                        : {{ $selectedEmployee->ops_id ?? null }}
                     </dd>
                 </div>
                 <div class="flex">

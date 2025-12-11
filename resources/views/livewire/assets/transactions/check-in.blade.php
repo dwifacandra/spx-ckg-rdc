@@ -83,20 +83,20 @@
                         OPS ID
                     </dt>
                     <dd class="flex-1 text-gray-600 dark:text-neutral-400">
-                        : {{ $opsId ?: null }}
+                        : {{ $selectedEmployee->ops_id ?? null }}
                     </dd>
                 </div>
                 <div class="flex">
                     <dt class="w-40 font-medium text-gray-900 dark:text-white">
                         Staff Name
                     </dt>
-                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">:</dd>
+                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->staff_name ?? null }}</dd>
                 </div>
                 <div class="flex">
                     <dt class="w-40 font-medium text-gray-900 dark:text-white">
                         Contract Type
                     </dt>
-                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">:</dd>
+                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->contract_type ?? null }}</dd>
                 </div>
             </dl>
         </div>

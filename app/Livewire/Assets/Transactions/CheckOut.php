@@ -72,7 +72,7 @@ class CheckOut extends Component
         if (!$this->selectedAsset) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Asset tidak ditemukan';
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
             return;
         }
@@ -82,7 +82,7 @@ class CheckOut extends Component
             // Kasus A: Asset sedang aktif dipinjam (Checked Out)
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Asset sedang digunakan';
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
             return;
         }
@@ -92,8 +92,8 @@ class CheckOut extends Component
             DB::transaction(function () {
                 // A. Buat Transaksi Peminjaman (Check Out)
                 AssetTransaction::create([
-                    'asset_id' => $this->selectedAsset->code,
-                    'ops_id' => $this->selectedEmployee->ops_id,
+                    'asset_id' => $this->cleanAndCapitalize($this->selectedAsset->code),
+                    'ops_id' => $this->cleanAndCapitalize($this->selectedEmployee->ops_id),
                     'check_out' => now(),
                     'status' => 'in use', // Status transaksi: Sedang dipinjam
                     'created_by' => auth()->id(),
@@ -106,12 +106,12 @@ class CheckOut extends Component
                 $this->statusMessage = 'Check Out';
             });
 
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
         } catch (\Exception $e) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Gagal menyimpan transaksi: ' . $e->getMessage();
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
         }
     }

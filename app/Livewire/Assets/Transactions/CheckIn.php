@@ -4,6 +4,7 @@ namespace App\Livewire\Assets\Transactions;
 
 use App\Models\Asset;
 use Livewire\Component;
+use App\Models\Employee;
 use App\Models\AssetTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,7 @@ class CheckIn extends Component
     public string $opsId = '';
     public string $assetCode = '';
     public ?Asset $selectedAsset = null;
+    public ?Employee $selectedEmployee = null;
     public string $statusMessage = 'Waiting for scan';
     public string $failureReason = '';
     public string $remark = '';
@@ -34,7 +36,26 @@ class CheckIn extends Component
     public function updatedOpsId($value)
     {
         $this->opsId = $this->cleanAndCapitalize($value);
-        $this->checkAutoSubmit();
+
+        if ($this->opsId) {
+            $pattern = '/^OPS[0-9]+$/';
+            $employee = Employee::where('ops_id', $this->opsId)->first();
+
+            if ($employee) {
+                $this->selectedEmployee = $employee;
+            } elseif (preg_match($pattern, $this->opsId)) {
+                $this->selectedEmployee = Employee::create([
+                    'ops_id' => $this->opsId,
+                    'staff_name' => '[NOT RECORDED]',
+                    'ops_status' => 'temperory',
+                ]);
+            } else {
+                $this->selectedEmployee = null;
+            }
+            $this->checkAutoSubmit();
+        } else {
+            $this->selectedEmployee = null;
+        }
     }
 
     // --- Logika Autosubmit ---
@@ -95,7 +116,7 @@ class CheckIn extends Component
         if (!$this->selectedAsset) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Asset tidak ditemukan';
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
             return;
         }
@@ -105,7 +126,7 @@ class CheckIn extends Component
         if (!$activeTransaction) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Asset tidak sedang dipinjam.';
-            $this->reset(['opsId', 'assetCode', 'selectedAsset']);
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
             return;
         }
@@ -113,7 +134,7 @@ class CheckIn extends Component
         // VALIDASI KETAT: OPS ID harus sesuai dengan transaksi aktif
         if ($activeTransaction->ops_id !== $this->opsId) {
             $this->statusMessage = 'OPS ID Mismatch';
-            $this->failureReason = 'Asset [' . $this->assetCode . '] dipinjam oleh OPS ID: ' . $activeTransaction->ops_id . '. Mohon scan atau masukkan OPS ID yang sesuai.';
+            $this->failureReason = 'Asset [' . $this->assetCode . '] dipinjam oleh OPS ID: ' . $activeTransaction->ops_id . ' / ' . $activeTransaction->staff_name . '. Mohon scan atau masukkan OPS ID yang sesuai.';
             return;
         }
 
@@ -157,12 +178,12 @@ class CheckIn extends Component
                 $this->failureReason = '';
             });
 
-            $this->reset(['opsId', 'assetCode', 'selectedAsset', 'remark']);
+            $this->reset(['opsId', 'assetCode', 'selectedAsset', 'selectedEmployee', 'remark']);
             $this->dispatch('focus-ops-id');
         } catch (\Exception $e) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Gagal menyimpan transaksi: ' . $e->getMessage();
-            $this->reset(['opsId', 'assetCode', 'selectedAsset', 'remark']);
+            $this->reset(['opsId', 'assetCode', 'selectedAsset', 'selectedEmployee', 'remark']);
             $this->dispatch('focus-ops-id');
         }
     }
