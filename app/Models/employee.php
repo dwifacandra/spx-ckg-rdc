@@ -39,6 +39,7 @@ class Employee extends Model
         'last_date' => 'date',
     ];
 
+    // Relationships to AssetTransaction model
     public function transactions(): HasMany
     {
         return $this->hasMany(AssetTransaction::class, 'ops_id');
