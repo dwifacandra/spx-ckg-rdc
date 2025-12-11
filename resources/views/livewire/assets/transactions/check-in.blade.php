@@ -17,7 +17,7 @@
                     <flux:field>
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="opsId" class="dark:text-white">OPS ID</flux:label>
-                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" autofocus
+                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" @keydown.enter.prevent="nextFocus('assetCode')" autofocus
                             autocomplete="off" x-data
                             x-init="$wire.on('focus-ops-id', () => { $el.focus(); $el.select(); })" />
                     </flux:field>
@@ -26,7 +26,7 @@
                     <flux:field>
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="assetCode" class="dark:text-white">ASSET CODE</flux:label>
-                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode"
+                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode" @keydown.enter.prevent="nextFocus('opsId')"
                             autocomplete="off" />
                     </flux:field>
                 </div>
@@ -236,20 +236,10 @@
 </div>
 
 <script>
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.on('start-reset-timer', ({
-            seconds = 10
-        }) => {
-            console.log(`Starting reset timer for ${seconds} seconds...`);
-            setTimeout(() => {
-                @this.dispatch('resetFormNow');
-
-                setTimeout(() => {
-                    document.getElementById('opsId').focus();
-                }, 100);
-            }, seconds * 1000);
-        });
-
-        document.getElementById('opsId').focus();
-    });
+    function nextFocus(nextId){
+        const nextElement = document.getElementById(nextId);
+        if(nextElement){
+            nextElement.focus();
+        }
+    }
 </script>
