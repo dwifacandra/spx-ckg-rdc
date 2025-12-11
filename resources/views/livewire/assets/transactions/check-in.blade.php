@@ -160,7 +160,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Asset Item
+                            Duration
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
@@ -177,14 +177,39 @@
                     @forelse($recentTransactions as $transaction)
                     {{-- Table Row Hover (Menggunakan neutral-700) --}}
                     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->ops_id }}
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->ops_id }}
+                                </div>
+                                <div>
+                                    <span
+                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->ops_profile->staff_name }}
+                                    </span>
+                                </div>
+
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col space-y-1">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->asset->code }}
+                                </div>
+                                <div>
+                                    <span
+                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->asset->serial_number }}
+                                    </span>
+                                </div>
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->asset->code ?? 'N/A' }}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->asset->item ?? 'N/A' }}
+                            <div class="flex items-center space-x-2">
+                                <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+
+                                <span>{{ $transaction->getDurationInHours() }}</span>
+                            </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             {{-- Badge Status --}}

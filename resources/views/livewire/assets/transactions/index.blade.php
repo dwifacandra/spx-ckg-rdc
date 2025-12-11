@@ -158,7 +158,7 @@
                                 <div>
                                     <span
                                         class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
-                                        {{ $transaction->asset->serial_number }}
+                                        {{ $transaction->ops_profile->staff_name }}
                                     </span>
                                 </div>
 

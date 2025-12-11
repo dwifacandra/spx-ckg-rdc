@@ -10,6 +10,10 @@ class Asset extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'code';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'item',
         'brand',
@@ -23,17 +27,15 @@ class Asset extends Model
         'ownership',
     ];
 
-    /**
-     * Get all transactions for this asset.
-     */
     public function transactions(): HasMany
     {
-        return $this->hasMany(AssetTransaction::class);
+        return $this->hasMany(
+            AssetTransaction::class,
+            'asset_id',
+            'code'
+        );
     }
 
-    /**
-     * Get the currently active transaction for this asset.
-     */
     public function activeTransaction()
     {
         return $this->transactions()
@@ -42,17 +44,11 @@ class Asset extends Model
             ->first();
     }
 
-    /**
-     * Check if asset is currently checked out.
-     */
     public function isCheckedOut(): bool
     {
         return !is_null($this->activeTransaction());
     }
 
-    /**
-     * Check if asset is available.
-     */
     public function isAvailable(): bool
     {
         return is_null($this->activeTransaction()) && $this->status === 'complete';
