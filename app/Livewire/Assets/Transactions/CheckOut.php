@@ -92,8 +92,8 @@ class CheckOut extends Component
             DB::transaction(function () {
                 // A. Buat Transaksi Peminjaman (Check Out)
                 AssetTransaction::create([
-                    'asset_id' => $this->selectedAsset->id,
-                    'ops_id' => $this->opsId,
+                    'asset_id' => $this->selectedAsset->code,
+                    'ops_id' => $this->selectedEmployee->ops_id,
                     'check_out' => now(),
                     'status' => 'in use', // Status transaksi: Sedang dipinjam
                     'created_by' => auth()->id(),
