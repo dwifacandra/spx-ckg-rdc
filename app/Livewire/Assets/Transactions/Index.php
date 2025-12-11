@@ -76,9 +76,9 @@ class Index extends Component
 
         $stats = [
             'total' => AssetTransaction::count(),
-            'active' => AssetTransaction::where('status', 'in use')->whereNull('check_out')->count(),
+            'active' => AssetTransaction::where('status', 'in use')->whereNull('check_in')->count(),
             'complete' => AssetTransaction::where('status', 'complete')->count(),
-            'overdue' => AssetTransaction::where('status', 'overtime')->whereNull('check_out')->count(),
+            'overdue' => AssetTransaction::where('status', 'overtime')->whereNull('check_in')->count(),
         ];
 
 
