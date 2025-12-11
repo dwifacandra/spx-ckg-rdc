@@ -5,7 +5,7 @@
             📤 Asset Check Out
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-            Enter OPS ID and Asset Code to record Check Out.
+            Enter OPS ID and Asset Code to record Check Out (Peminjaman).
         </p>
     </div>
 
@@ -158,7 +158,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Transaction Datetime
+                            Check Out Datetime
                         </th>
                     </tr>
                 </thead>
@@ -209,7 +209,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400">
-                            {{ $transaction->created_at->format('d/m/Y H:i:s') }}
+                            {{ $transaction->check_out->format('d/m/Y H:i:s') }}
                         </td>
                     </tr>
                     @empty
