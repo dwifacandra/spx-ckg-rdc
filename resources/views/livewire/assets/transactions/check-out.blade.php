@@ -11,14 +11,14 @@
 
     {{-- Form Input Container --}}
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg p-6 mb-8">
-        <form wire:submit.prevent="save">
+        <form>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <flux:field>
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="opsId" class="dark:text-white">OPS ID</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" autofocus
+                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.defer="opsId" @keydown.enter.prevent="nextFocus('assetCode')" autofocus
                             autocomplete="off" x-data
                             x-init="$wire.on('focus-ops-id', () => { $el.focus(); $el.select(); })" />
                     </flux:field>
@@ -28,7 +28,7 @@
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="assetCode" class="dark:text-white">ASSET CODE</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode"
+                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode" @keydown.enter.prevent="save"
                             autocomplete="off" />
                     </flux:field>
                 </div>
@@ -226,7 +226,20 @@
 </div>
 
 <script>
+    function nextFocus(nextId){
+        const nextElement = document.getElementById(nextId);
+        if(nextElement){
+            nextElement.focus();
+        }
+    }
     document.addEventListener('livewire:initialized', () => {
+        Livewire.on('focusFirstInput',()=>{
+            const firstInput = document.getElementById('opsId');
+            if(firstInput){
+                firstInput.focus();
+            }
+        });
+    });
         Livewire.on('start-reset-timer', ({
             seconds = 10
         }) => {
