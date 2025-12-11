@@ -232,27 +232,4 @@
             nextElement.focus();
         }
     }
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.on('focusFirstInput',()=>{
-            const firstInput = document.getElementById('opsId');
-            if(firstInput){
-                firstInput.focus();
-            }
-        });
-    });
-        Livewire.on('start-reset-timer', ({
-            seconds = 10
-        }) => {
-            console.log(`Starting reset timer for ${seconds} seconds...`);
-            setTimeout(() => {
-                @this.dispatch('resetFormNow');
-
-                setTimeout(() => {
-                    document.getElementById('opsId').focus();
-                }, 100);
-            }, seconds * 1000);
-        });
-
-        document.getElementById('opsId').focus();
-    });
 </script>
