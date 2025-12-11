@@ -201,7 +201,7 @@ class CheckIn extends Component
     {
         $recentTransactions = AssetTransaction::with('asset')
             ->where('status', 'complete')
-            ->orderBy('check_out', 'desc')
+            ->orderBy('check_in', 'desc')
             ->limit(10)
             ->get();
 
