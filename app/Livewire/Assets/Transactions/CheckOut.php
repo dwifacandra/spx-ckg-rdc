@@ -130,7 +130,7 @@ class CheckOut extends Component
     {
         $recentTransactions = AssetTransaction::with('asset')
             ->where('status', 'in use')
-            ->orderBy('created_at', 'desc')
+            ->orderBy('check_out', 'desc')
             ->limit(10)
             ->get();
 
