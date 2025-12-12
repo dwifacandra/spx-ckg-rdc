@@ -1,8 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Laravel\Fortify\Features;
+use App\Models\User;
 use Livewire\Volt\Volt;
+use Laravel\Fortify\Features;
+use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/dashboard')->name('home');
 
@@ -56,4 +57,17 @@ Route::middleware(['auth'])->group(function () {
 
         abort(404);
     })->name('download.failed.imports');
+
+    // Generate Personal Access Token for Google Sheets Importer
+    // Route::get('/generate-pat-once', function () {
+    //     $apiUser = User::where('email', 'adityadwifacandra.adn@gmail.com')->first();
+
+    //     if (!$apiUser) {
+    //         return "User tidak ditemukan.";
+    //     }
+
+    //     $token = $apiUser->createToken('google-sheets-importer', ['read'])->plainTextToken;
+
+    //     return $token;
+    // });
 });
