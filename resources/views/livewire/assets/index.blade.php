@@ -29,7 +29,8 @@
                 <table class="min-w-full">
                     <thead class="bg-neutral-50 dark:bg-neutral-700">
                         <tr>
-                            @foreach(['Item', 'Brand', 'Code', 'Type', 'Tag', 'Serial Number', 'Condition', 'Status',
+                            @foreach(['Item', 'Brand', 'Code', 'Type', 'Tag', 'Serial Number', 'Last
+                            Transaction','Condition', 'Status',
                             'Remarks'] as $header)
                             <th
                                 class="px-6 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-300 uppercase tracking-wider">
@@ -58,6 +59,22 @@
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-300">
                                 {{ $asset->serial_number }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-300">
+                                @if ($asset->lastTransaction)
+                                @php
+                                $transaction = $asset->lastTransaction;
+                                $date = $transaction->check_out
+                                ? \Carbon\Carbon::parse($transaction->check_out)->format('d-M')
+                                : \Carbon\Carbon::parse($transaction->created_at)->format('d-M');
+                                $statusFormatted = ucfirst($transaction->status);
+                                $opsIdFormatted = strtoupper($transaction->ops_id);
+                                @endphp
+                                {{ $date }} / {{ $statusFormatted }} / {{ $opsIdFormatted }} ({{
+                                $transaction->ops_profile->staff_name }})
+                                @else
+                                <span class="text-gray-500 italic">No Transaction</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600 dark:text-neutral-300">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full

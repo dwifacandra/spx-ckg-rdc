@@ -48,7 +48,7 @@ class Asset extends Model
     public function lastTransaction(): HasOne
     {
         return $this->hasOne(AssetTransaction::class, 'asset_id', 'code')
-            ->latest();
+            ->latestOfMany();
     }
 
     public function isCheckedOut(): bool
