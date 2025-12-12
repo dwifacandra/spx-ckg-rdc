@@ -39,9 +39,13 @@ class Employee extends Model
         'last_date' => 'date',
     ];
 
-    // Relationships to AssetTransaction model
     public function transactions(): HasMany
     {
         return $this->hasMany(AssetTransaction::class, 'ops_id');
+    }
+
+    public function accessCardTransactions(): HasMany
+    {
+        return $this->hasMany(AccessCardTransaction::class, 'ops_id', 'ops_id');
     }
 }
