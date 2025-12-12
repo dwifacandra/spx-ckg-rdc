@@ -17,8 +17,8 @@
                     <flux:field>
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="opsId" class="dark:text-white">OPS ID</flux:label>
-                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" @keydown.enter.prevent="nextFocus('assetCode')" autofocus
-                            autocomplete="off" x-data
+                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId"
+                            @keydown.enter.prevent="nextFocus('assetCode')" autofocus autocomplete="off" x-data
                             x-init="$wire.on('focus-ops-id', () => { $el.focus(); $el.select(); })" />
                     </flux:field>
                 </div>
@@ -26,8 +26,8 @@
                     <flux:field>
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="assetCode" class="dark:text-white">ASSET CODE</flux:label>
-                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode" @keydown.enter.prevent="nextFocus('opsId')"
-                            autocomplete="off" />
+                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode"
+                            @keydown.enter.prevent="nextFocus('opsId')" autocomplete="off" />
                     </flux:field>
                 </div>
             </div>
@@ -37,12 +37,10 @@
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         @php
         $statusClass = match ($statusMessage) {
-        // Status menunggu, menggunakan Neutral Dark Mode
         'Waiting for scan' =>
         'bg-white dark:bg-neutral-800 border-gray-200 dark:border-neutral-700 text-gray-700 dark:text-neutral-300',
-        // Status Sukses
         'Check In' => 'bg-green-500 border-green-500 text-white',
-        // Status Gagal/Mismatch
+        'Force Check In Successful' => 'bg-green-500 border-green-500 text-white',
         default => 'bg-red-500 border-red-500 text-white',
         };
         @endphp
@@ -55,15 +53,15 @@
             </p>
 
             {{-- Tampilkan Failure Reason jika ada kegagalan --}}
-            @if (($statusMessage === 'Failed' || $statusMessage === 'OPS ID Mismatch') && $failureReason)
-            <p class="text-lg font-medium pt-2">
-                {{ $failureReason }}
+            @if (($statusMessage === 'Failed' || $statusMessage === 'Asset Mismatch') && $failureReason)
+            <p class="text-sm font-medium pt-2">
+                {!! $failureReason !!}
             </p>
             @endif
 
             {{-- Tombol Force Check In hanya muncul saat OPS ID Mismatch (Tombol sudah punya warna spesifik, tidak perlu
             dark:bg) --}}
-            @if ($statusMessage === 'OPS ID Mismatch')
+            @if ($statusMessage === 'Asset Mismatch')
             <button wire:click="forceCheckIn"
                 class="px-3 py-1 bg-yellow-500 text-white text-sm font-medium rounded-md shadow-sm hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-75 mt-2">
                 Force Check In
@@ -90,13 +88,15 @@
                     <dt class="w-40 font-medium text-gray-900 dark:text-white">
                         Staff Name
                     </dt>
-                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->staff_name ?? null }}</dd>
+                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->staff_name ?? null }}
+                    </dd>
                 </div>
                 <div class="flex">
                     <dt class="w-40 font-medium text-gray-900 dark:text-white">
                         Contract Type
                     </dt>
-                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->contract_type ?? null }}</dd>
+                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->contract_type ?? null
+                        }}</dd>
                 </div>
             </dl>
         </div>
@@ -144,7 +144,7 @@
                 Recent Check In 🕒
             </h2>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" wire:poll>
             {{-- Table Divider --}}
             <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                 {{-- Table Head --}}
@@ -160,7 +160,11 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Duration
+                            Check In
+                        </th>
+                        <th
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
+                            Issue
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
@@ -168,7 +172,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Check In Datetime
+                            User
                         </th>
                     </tr>
                 </thead>
@@ -204,22 +208,28 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <div class="flex items-center space-x-2">
-                                <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
-
-                                <span>{{ $transaction->getDurationInHours() }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col space-y-1">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->check_in->format('d/m/Y H:i:s') }}
+                                </div>
+                                <div class="flex items-center space-x-2 text-sm">
+                                    <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                    <span>{{ $transaction->getDurationInHours() }}</span>
+                                </div>
                             </div>
                         </td>
+                        <td class="px-6 py-4 text-sm whitespace-normal break-words text-gray-500 dark:text-neutral-400">
+                            {{ $transaction->remarks }}
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{-- Badge Status --}}
                             <span
                                 class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                 {{ ucfirst($transaction->status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400">
-                            {{ $transaction->check_in->format('d/m/Y H:i:s') }}
+                            {{ $transaction->user->name }}
                         </td>
                     </tr>
                     @empty

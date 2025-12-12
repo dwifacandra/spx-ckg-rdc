@@ -19,8 +19,6 @@ class CheckIn extends Component
     public string $failureReason = '';
     public string $remark = '';
 
-    // --- Hooks untuk Input (onblur) ---
-
     public function updatedAssetCode($value)
     {
         $this->assetCode = $this->cleanAndCapitalize($value);
@@ -58,8 +56,6 @@ class CheckIn extends Component
         }
     }
 
-    // --- Logika Autosubmit ---
-
     public function checkAutoSubmit()
     {
         if (!empty($this->opsId) && !empty($this->assetCode)) {
@@ -67,104 +63,125 @@ class CheckIn extends Component
         }
     }
 
-    // --- Logika Force Check In ---
-
     public function forceCheckIn()
     {
-        if (!$this->selectedAsset) {
+        if (empty($this->opsId)) {
             $this->statusMessage = 'Failed';
-            $this->failureReason = 'Tidak ada aset terdeteksi untuk Force Check In.';
+            $this->failureReason = 'OPS ID wajib diisi untuk Force Check In.';
             return;
         }
 
-        $activeTransaction = $this->findActiveTransaction(false);
+        $activeTransactions = AssetTransaction::query()
+            ->where('ops_id', $this->opsId)
+            ->whereNotNull('check_out')
+            ->whereNull('check_in')
+            ->where(fn($query) => $query->where('status', 'in use')->orWhere('status', 'overtime'))
+            ->get();
 
-        if (!$activeTransaction) {
+        if ($activeTransactions->isEmpty()) {
             $this->statusMessage = 'Failed';
-            $this->failureReason = 'Asset tidak sedang dipinjam.';
+            $this->failureReason = 'OPS ID [' . $this->opsId . '] tidak memiliki pinjaman aktif untuk Force Check In.';
             return;
         }
 
-        $remarkText = "FORCED CHECK IN: ";
+        $successCount = 0;
+        $failureCount = 0;
 
-        if ($this->statusMessage === 'OPS ID Mismatch') {
-            $remarkText .= "OPS ID mismatch detected. Expected: " . $activeTransaction->ops_id . ". Scanned: " . $this->opsId;
-        } elseif (!empty($this->failureReason)) {
-            $remarkText .= $this->failureReason;
+        foreach ($activeTransactions as $activeTransaction) {
+            $remarkText = "FORCED CHECK IN (ADMIN: " . (Auth::check() ? Auth::user()->name : 'System') . "): ";
+
+            if (!empty($this->assetCode)) {
+                $remarkText .= "Asset Code scanned for override: [" . $this->assetCode . "]. Transaction Asset: [" . $activeTransaction->asset_id . "].";
+            } else {
+                $remarkText .= "Manual batch override. ";
+            }
+
+            try {
+                $this->executeCheckIn($activeTransaction, $remarkText);
+                $successCount++;
+            } catch (\Exception $e) {
+                $failureCount++;
+            }
+        }
+
+        if ($successCount > 0) {
+            $this->statusMessage = 'Force Check In Successful';
+            $this->failureReason = "Berhasil mengakhiri {$successCount} pinjaman aktif untuk OPS ID [{$this->opsId}]."
+                . ($failureCount > 0 ? " ({$failureCount} transaksi gagal diproses)." : "");
+            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
+            $this->dispatch('focus-ops-id');
         } else {
-            $remarkText .= "Manual override by user: " . (Auth::check() ? Auth::user()->name : 'System User');
+            $this->statusMessage = 'Failed';
+            $this->failureReason = 'Terjadi kesalahan saat memproses Force Check In.';
         }
-
-        $this->executeCheckIn($activeTransaction, $remarkText);
     }
-
-    // --- Logika Utama Check In (Pengembalian Normal) ---
 
     public function save()
     {
         if (empty($this->assetCode) || empty($this->opsId)) {
-            if (empty($this->assetCode)) {
-                $this->statusMessage = 'Failed';
-                $this->failureReason = 'Asset Code wajib diisi.';
-            } elseif (empty($this->opsId)) {
-                $this->statusMessage = 'Failed';
-                $this->failureReason = 'OPS ID wajib diisi.';
-            }
+            $this->statusMessage = 'Failed';
+            $this->failureReason = empty($this->assetCode) ? 'Asset Code wajib diisi.' : 'OPS ID wajib diisi.';
             return;
         }
 
         if (!$this->selectedAsset) {
             $this->statusMessage = 'Failed';
-            $this->failureReason = 'Asset tidak ditemukan';
+            $this->failureReason = 'Asset tidak terdaftar.';
             $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
             $this->dispatch('focus-ops-id');
             return;
         }
 
-        $activeTransaction = $this->findActiveTransaction(false);
+        $activeTransaction = $this->findActiveTransaction(true);
 
         if (!$activeTransaction) {
-            $this->statusMessage = 'Failed';
-            $this->failureReason = 'Asset tidak sedang dipinjam.';
-            $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
+            $anyActiveTransaction = $this->findActiveTransaction(false);
+
+            if ($anyActiveTransaction) {
+                $findOpsIdScannedAssetCode = AssetTransaction::where('asset_id', $this->assetCode)->first();
+                $this->statusMessage = 'Asset Mismatch';
+                $this->failureReason = 'Expected: [' . $anyActiveTransaction->asset_id . '], Scanned: [' . $this->assetCode . ']<br/>'
+                    . $this->assetCode . ' Checked Out by '
+                    . strtoupper($findOpsIdScannedAssetCode->ops_id) . ' / '
+                    . $findOpsIdScannedAssetCode->ops_profile->staff_name . '.';
+            } else {
+                $this->statusMessage = 'Failed';
+                $this->failureReason = 'OPS ID [' . $this->opsId . '] tidak memiliki pinjaman aktif.';
+
+                $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);
+            }
             $this->dispatch('focus-ops-id');
             return;
         }
-
-        // VALIDASI KETAT: OPS ID harus sesuai dengan transaksi aktif
-        if ($activeTransaction->ops_id !== $this->opsId) {
-            $this->statusMessage = 'OPS ID Mismatch';
-            $this->failureReason = 'Asset [' . $this->assetCode . '] dipinjam oleh OPS ID: ' . $activeTransaction->ops_id . ' / ' . $activeTransaction->staff_name . '. Mohon scan atau masukkan OPS ID yang sesuai.';
-            return;
-        }
-
         $this->executeCheckIn($activeTransaction, null);
     }
 
-    // --- Metode Pembantu ---
-
-    private function findActiveTransaction(bool $useOpsIdFilter = true)
+    private function findActiveTransaction(bool $useAssetCodeFilter = true)
     {
-        if (!$this->selectedAsset) return null;
+        if (empty($this->opsId)) {
+            return null;
+        }
 
-        $activeTransactionQuery = $this->selectedAsset->transactions()
+        $activeTransactionQuery = AssetTransaction::query()
+            ->where('ops_id', $this->opsId)
             ->whereNotNull('check_out')
             ->whereNull('check_in')
             ->where(function ($query) {
-                // Status aktif yang memerlukan Check In
                 $query->where('status', 'in use')
                     ->orWhere('status', 'overtime');
-            })
-            ->latest('created_at');
+            });
 
-        return $activeTransactionQuery->first();
+        if ($useAssetCodeFilter && !empty($this->assetCode)) {
+            $activeTransactionQuery->where('asset_id', $this->assetCode);
+        }
+
+        return $activeTransactionQuery->latest('created_at')->first();
     }
 
     private function executeCheckIn(AssetTransaction $activeTransaction, ?string $remark = null)
     {
         try {
             DB::transaction(function () use ($activeTransaction, $remark) {
-                // A. Update Transaksi Aktif (Tabel asset_transactions)
                 $activeTransaction->check_in = now();
                 $activeTransaction->status = 'complete';
 

@@ -25,8 +25,8 @@
                 </flux:button.group>
             </div>
 
-            <div class="overflow-x-auto border-t border-neutral-200 dark:border-neutral-700">
-                <table class="min-w-full" wire:poll>
+            <div class="overflow-x-auto border-t border-neutral-200 dark:border-neutral-700" wire:poll>
+                <table class="min-w-full">
                     <thead class="bg-neutral-50 dark:bg-neutral-700">
                         <tr>
                             @foreach(['Item', 'Brand', 'Code', 'Type', 'Tag', 'Serial Number', 'Condition', 'Status',

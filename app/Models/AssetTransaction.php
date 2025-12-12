@@ -84,11 +84,12 @@ class AssetTransaction extends Model
             $endTime = now();
         }
 
-        $totalMinutes = abs($startTime->diffInMinutes($endTime));
+        $totalSeconds = abs($startTime->diffInSeconds($endTime));
+        $hours = floor($totalSeconds / 3600);
+        $remainingSeconds = $totalSeconds % 3600;
+        $minutes = floor($remainingSeconds / 60);
 
-        $hours = floor($totalMinutes / 60);
-        $minutes = $totalMinutes % 60;
-
-        return sprintf('%02d:%02d', $hours, $minutes);
+        $seconds = $remainingSeconds % 60;
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
     }
 }

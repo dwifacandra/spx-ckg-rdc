@@ -18,8 +18,8 @@
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="opsId" class="dark:text-white">OPS ID</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" @keydown.enter.prevent="nextFocus('assetCode')" autofocus
-                            autocomplete="off" x-data
+                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId"
+                            @keydown.enter.prevent="nextFocus('assetCode')" autofocus autocomplete="off" x-data
                             x-init="$wire.on('focus-ops-id', () => { $el.focus(); $el.select(); })" />
                     </flux:field>
                 </div>
@@ -28,8 +28,8 @@
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="assetCode" class="dark:text-white">ASSET CODE</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode" @keydown.enter.prevent="nextFocus('opsId')"
-                            autocomplete="off" />
+                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode"
+                            @keydown.enter.prevent="nextFocus('opsId')" autocomplete="off" />
                     </flux:field>
                 </div>
             </div>
@@ -86,7 +86,8 @@
                     <dt class="w-40 font-medium text-gray-900 dark:text-white">
                         Contract Type
                     </dt>
-                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->contract_type ?? null }}</dd>
+                    <dd class="flex-1 text-gray-600 dark:text-neutral-400">: {{ $selectedEmployee->contract_type ?? null
+                        }}</dd>
                 </div>
             </dl>
         </div>
@@ -134,7 +135,7 @@
                 Recent Check Out 🕒
             </h2>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto" wire:poll>
             {{-- Table Divider --}}
             <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                 {{-- Table Head --}}
@@ -150,7 +151,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Duration
+                            Check Out
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
@@ -158,7 +159,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Check Out Datetime
+                            User
                         </th>
                     </tr>
                 </thead>
@@ -194,22 +195,25 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            <div class="flex items-center space-x-2">
-                                <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
-
-                                <span>{{ $transaction->getDurationInHours() }}</span>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex flex-col space-y-1">
+                                <div class="text-sm  text-gray-900 dark:text-white">
+                                    {{ $transaction->check_out->format('d/m/Y H:i:s') }}
+                                </div>
+                                <div class="flex items-center space-x-1 text-sm">
+                                    <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                                    <span>{{ $transaction->getDurationInHours() }}</span>
+                                </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            {{-- Badge Status (Menggunakan skema warna Dark Mode yang sudah ada) --}}
                             <span
                                 class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
                                 {{ ucfirst($transaction->status) }}
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400">
-                            {{ $transaction->check_out->format('d/m/Y H:i:s') }}
+                            {{ $transaction->user->name }}
                         </td>
                     </tr>
                     @empty
