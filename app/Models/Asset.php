@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Asset extends Model
 {
@@ -42,6 +43,12 @@ class Asset extends Model
             ->where('status', 'in use')
             ->whereNull('check_in')
             ->first();
+    }
+
+    public function lastTransaction(): HasOne
+    {
+        return $this->hasOne(AssetTransaction::class, 'asset_id', 'code')
+            ->latest();
     }
 
     public function isCheckedOut(): bool

@@ -9,68 +9,86 @@
         </p>
     </div>
 
-    {{-- Container utama yang disederhanakan agar lebih sesuai dengan konteks dashboard --}}
-    <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6 p-6">
-        <div class="row-gap-8 grid grid-cols-2 md:grid-cols-4">
+    <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6" wire:poll>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-x divide-slate-200 dark:divide-neutral-700">
 
-            {{-- Statistik 1: Total Transactions --}}
-            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
-                <div
-                    class="font-heading text-2xl font-bold text-blue-600 dark:text-blue-400 lg:text-3xl xl:text-4xl truncate">
-                    {{ $stats["total"] }}
+            <div class="p-4 text-center">
+                <div class="font-heading text-5xl font-extrabold text-blue-600 dark:text-blue-400 truncate">
+                    {{ $stats["total"]["total"] }}
                 </div>
-                <p
-                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
-                    Total Transactions
+                <p class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 mt-2 mb-3">
+                    TOTAL ASSET KESELURUHAN
                 </p>
+
+                <div
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-blue-50/70 dark:bg-blue-900/50 rounded">
+                    <span>PDA: <span class="font-bold">{{ $stats["total"]["pda"] }}</span></span>
+                    <span class="text-blue-700 dark:text-blue-400">|</span>
+                    <span>HT: <span class="font-bold">{{ $stats["total"]["ht"] }}</span></span>
+                </div>
             </div>
 
-            {{-- Statistik 2: Currently In Use --}}
-            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
-                <div
-                    class="font-heading text-2xl font-bold text-green-600 dark:text-green-400 lg:text-3xl xl:text-4xl truncate">
-                    {{ $stats["active"] }}
+
+            <div class="p-4 text-center">
+                <div class="font-heading text-5xl font-extrabold text-green-600 dark:text-green-400 truncate">
+                    {{ $stats["active"]["total"] }}
                 </div>
-                <p
-                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
-                    Currently In Use
+                <p class="text-xs font-medium uppercase tracking-widest text-green-700 dark:text-green-300 mt-2 mb-3">
+                    CURRENTLY IN USE
                 </p>
+
+                <div
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-green-100/70 dark:bg-green-900/50 rounded">
+                    <span>PDA: <span class="font-bold">{{ $stats["active"]["pda"] }}</span></span>
+                    <span class="text-green-700 dark:text-green-400">|</span>
+                    <span>HT: <span class="font-bold">{{ $stats["active"]["ht"] }}</span></span>
+                </div>
             </div>
 
-            {{-- Statistik 3: Completed --}}
-            <div class="mb-6 text-center md:mb-0 md:border-r md:border-slate-200 dark:md:border-neutral-600">
-                <div
-                    class="font-heading text-2xl font-bold text-gray-700 dark:text-gray-300 lg:text-3xl xl:text-4xl truncate">
-                    {{ $stats["complete"] }}
+
+            <div class="p-4 text-center">
+                <div class="font-heading text-5xl font-extrabold text-gray-700 dark:text-gray-300 truncate">
+                    {{ $stats["complete"]["total"] }}
                 </div>
-                <p
-                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
-                    Completed
+                <p class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 mt-2 mb-3">
+                    COMPLETED
                 </p>
+
+                <div
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-gray-100/70 dark:bg-neutral-700/50 rounded">
+                    <span>PDA: <span class="font-bold">{{ $stats["complete"]["pda"] }}</span></span>
+                    <span class="text-gray-700 dark:text-neutral-400">|</span>
+                    <span>HT: <span class="font-bold">{{ $stats["complete"]["ht"] }}</span></span>
+                </div>
             </div>
 
-            {{-- Statistik 4: Overdue --}}
-            <div class="mb-6 text-center md:mb-0">
-                <div
-                    class="font-heading text-2xl font-bold text-red-600 dark:text-red-400 lg:text-3xl xl:text-4xl truncate">
-                    {{ $stats["overdue"] }}
+
+            <div class="p-4 text-center">
+                <div class="font-heading text-5xl font-extrabold text-red-600 dark:text-red-400 truncate">
+                    {{ $stats["overdue"]["total"] }}
                 </div>
-                <p
-                    class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 lg:text-sm mt-1">
-                    Overdue
+                <p class="text-xs font-medium uppercase tracking-widest text-red-700 dark:text-red-300 mt-2 mb-3">
+                    OVERDUE
                 </p>
+
+                <div
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-red-100/70 dark:bg-red-900/50 rounded">
+                    <span>PDA: <span class="font-bold">{{ $stats["overdue"]["pda"] }}</span></span>
+                    <span class="text-red-700 dark:text-red-400">|</span>
+                    <span>HT: <span class="font-bold">{{ $stats["overdue"]["ht"] }}</span></span>
+                </div>
             </div>
+
         </div>
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6">
         <div class="p-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <flux:input icon="magnifying-glass" placeholder="Search by asset code, item, brand, or user..."
+            <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+                <div class="col-span-2">
+                    <flux:input icon="magnifying-glass" placeholder="Search by ops id, code, item, tag, sn, or user..."
                         wire:model.live.debounce.300ms="search" />
                 </div>
-
                 <div>
                     <flux:select wire:model.live="statusFilter" placeholder="Choose Status">
                         <flux:select.option value="">All Status</flux:select.option>
@@ -79,20 +97,29 @@
                         <flux:select.option value="overtime">Overdue</flux:select.option>
                     </flux:select>
                 </div>
-
-                <div class="flex items-end">
+                <div>
+                    <flux:input.group>
+                        <flux:input.group.prefix>Check Out</flux:input.group.prefix>
+                        <flux:input type="date" wire:model.live="checkOutDateFilter" id="check_out_date" />
+                    </flux:input.group>
+                </div>
+                <div class="pl-4">
+                    <flux:input.group>
+                        <flux:input.group.prefix>Check In</flux:input.group.prefix>
+                        <flux:input type="date" wire:model.live="checkInDateFilter" id="check_in_date" />
+                    </flux:input.group>
+                </div>
+                <div class="pl-4 flex items-end">
                     <flux:button wire:click="resetFilters">Clear Filters</flux:button>
                 </div>
+
             </div>
         </div>
     </div>
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
         <div class="overflow-x-auto" wire.poll>
-            {{-- DIVIDER TABLE: Menggunakan dark:divide-neutral-700 --}}
             <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
-
-                {{-- TABLE HEAD: Menggunakan dark:bg-neutral-700 --}}
                 <thead class="bg-gray-50 dark:bg-neutral-700">
                     <tr>
                         <th scope="col"
@@ -145,8 +172,6 @@
                         </th>
                     </tr>
                 </thead>
-
-                {{-- TABLE BODY --}}
                 <tbody class="bg-white dark:bg-neutral-800 divide-y divide-gray-200 dark:divide-neutral-700">
                     @forelse ($transactions as $transaction)
                     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700">
@@ -233,9 +258,7 @@
                 </tbody>
             </table>
         </div>
-
         @if ($transactions->hasPages())
-        {{-- PAGINATION CONTAINER: Menggunakan dark:bg-neutral-800 dan dark:border-neutral-700 --}}
         <div
             class="bg-white dark:bg-neutral-800 px-4 py-3 flex items-center justify-between border-t border-gray-200 dark:border-neutral-700 sm:px-6">
             {{ $transactions->links() }}
