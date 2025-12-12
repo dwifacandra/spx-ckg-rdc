@@ -11,66 +11,59 @@
 
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6" wire:poll>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-x divide-slate-200 dark:divide-neutral-700">
-
             <div class="p-4 text-center">
-                <div class="font-heading text-5xl font-extrabold text-blue-600 dark:text-blue-400 truncate">
+                <div class="font-heading text-5xl font-extrabold text-gray-600 dark:text-gray-400 truncate">
                     {{ $stats["total"]["total"] }}
                 </div>
-                <p class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 mt-2 mb-3">
-                    TOTAL ASSET KESELURUHAN
+                <p class="flex flex-col text-gray-500 dark:text-neutral-400 mt-2 mb-3">
+                    <span class="text-sm tracking-widest font-medium uppercase">TOTAL ASSETS</span>
+                    <span class="italic font-normal text-xs">(Total Keseluruhan Asset)</span>
                 </p>
-
                 <div
-                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-blue-50/70 dark:bg-blue-900/50 rounded">
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-gray-50/70 dark:bg-gray-900/50 rounded">
                     <span>PDA: <span class="font-bold">{{ $stats["total"]["pda"] }}</span></span>
-                    <span class="text-blue-700 dark:text-blue-400">|</span>
+                    <span class="text-gray-700 dark:text-gray-400">|</span>
                     <span>HT: <span class="font-bold">{{ $stats["total"]["ht"] }}</span></span>
                 </div>
             </div>
-
-
             <div class="p-4 text-center">
-                <div class="font-heading text-5xl font-extrabold text-green-600 dark:text-green-400 truncate">
+                <div class="font-heading text-5xl font-extrabold text-orange-600 dark:text-orange-400 truncate">
                     {{ $stats["active"]["total"] }}
                 </div>
-                <p class="text-xs font-medium uppercase tracking-widest text-green-700 dark:text-green-300 mt-2 mb-3">
-                    CURRENTLY IN USE
+                <p class="flex flex-col text-orange-700 dark:text-orange-300 mt-2 mb-3">
+                    <span class="text-sm tracking-widest font-medium uppercase">CURRENTLY IN USE</span>
+                    <span class="italic font-normal text-xs">(Asset sedang dipinjam)</span>
                 </p>
-
                 <div
-                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-green-100/70 dark:bg-green-900/50 rounded">
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-orange-100/70 dark:bg-orange-900/50 rounded">
                     <span>PDA: <span class="font-bold">{{ $stats["active"]["pda"] }}</span></span>
-                    <span class="text-green-700 dark:text-green-400">|</span>
+                    <span class="text-orange-700 dark:text-orange-400">|</span>
                     <span>HT: <span class="font-bold">{{ $stats["active"]["ht"] }}</span></span>
                 </div>
             </div>
-
-
             <div class="p-4 text-center">
-                <div class="font-heading text-5xl font-extrabold text-gray-700 dark:text-gray-300 truncate">
+                <div class="font-heading text-5xl font-extrabold text-green-700 dark:text-green-300 truncate">
                     {{ $stats["complete"]["total"] }}
                 </div>
-                <p class="text-xs font-medium uppercase tracking-widest text-gray-500 dark:text-neutral-400 mt-2 mb-3">
-                    COMPLETED
+                <p class="flex flex-col text-green-700 dark:text-green-400 mt-2 mb-3">
+                    <span class="text-sm tracking-widest font-medium uppercase">COMPLETED</span>
+                    <span class="italic font-normal text-xs">(Asset sudah dikembalikan)</span>
                 </p>
-
                 <div
-                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-gray-100/70 dark:bg-neutral-700/50 rounded">
+                    class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-green-100/70 dark:bg-green-900/50 rounded">
                     <span>PDA: <span class="font-bold">{{ $stats["complete"]["pda"] }}</span></span>
-                    <span class="text-gray-700 dark:text-neutral-400">|</span>
+                    <span class="text-green-700 dark:text-green-400">|</span>
                     <span>HT: <span class="font-bold">{{ $stats["complete"]["ht"] }}</span></span>
                 </div>
             </div>
-
-
             <div class="p-4 text-center">
                 <div class="font-heading text-5xl font-extrabold text-red-600 dark:text-red-400 truncate">
                     {{ $stats["overdue"]["total"] }}
                 </div>
-                <p class="text-xs font-medium uppercase tracking-widest text-red-700 dark:text-red-300 mt-2 mb-3">
-                    OVERDUE
+                <p class="flex flex-col text-red-700 dark:text-red-300 mt-2 mb-3">
+                    <span class="text-sm tracking-widest font-medium uppercase">OVERDUE</span>
+                    <span class="italic font-normal text-xs">(Transaksi lebih dari 9 jam)</span>
                 </p>
-
                 <div
                     class="text-sm text-gray-700 dark:text-neutral-300 font-semibold flex justify-around p-2 bg-red-100/70 dark:bg-red-900/50 rounded">
                     <span>PDA: <span class="font-bold">{{ $stats["overdue"]["pda"] }}</span></span>
@@ -245,7 +238,7 @@
                             {{ $transaction->remarks }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->user->email }}
+                            {{ $transaction->user->name }}
                         </td>
                     </tr>
                     @empty
