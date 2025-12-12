@@ -104,6 +104,7 @@ class CheckOut extends Component
                 $this->selectedAsset->save();
 
                 $this->statusMessage = 'Check Out';
+                $this->dispatch('transaction-saved');
             });
 
             $this->reset(['opsId', 'assetCode', 'selectedEmployee', 'selectedAsset']);

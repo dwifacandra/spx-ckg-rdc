@@ -144,7 +144,8 @@
                 Recent Check In 🕒
             </h2>
         </div>
-        <div class="overflow-x-auto" wire:poll>
+        <div class="overflow-x-auto" wire:target="recentTransactions" wire:loading.class="opacity-50"
+            @transaction-saved.window="$wire.$refresh()">
             {{-- Table Divider --}}
             <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
                 {{-- Table Head --}}

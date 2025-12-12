@@ -197,6 +197,7 @@ class CheckIn extends Component
 
             $this->reset(['opsId', 'assetCode', 'selectedAsset', 'selectedEmployee', 'remark']);
             $this->dispatch('focus-ops-id');
+            $this->dispatch('transaction-saved');
         } catch (\Exception $e) {
             $this->statusMessage = 'Failed';
             $this->failureReason = 'Gagal menyimpan transaksi: ' . $e->getMessage();
