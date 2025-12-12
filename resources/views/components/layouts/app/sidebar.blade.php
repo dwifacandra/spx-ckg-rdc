@@ -21,7 +21,6 @@
             <flux:sidebar.group expandable heading="Assets" class="grid">
                 <flux:sidebar.item :href="route('assets.index')" :current="request()->routeIs('assets.index')"
                     wire:navigate>{{ __("Items") }}</flux:sidebar.item>
-
                 <flux:sidebar.group expandable heading="Transactions" class="grid">
                     <flux:sidebar.item :href="route('assets.transactions.checkin')"
                         :current="request()->routeIs('assets.transactions.checkin')" wire:navigate>{{ __("Check In") }}
@@ -33,6 +32,14 @@
                         :current="request()->routeIs('assets.transactions.index')" wire:navigate>{{ __("Logs") }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
+            </flux:sidebar.group>
+
+            {{-- Security --}}
+            <flux:sidebar.group expandable heading="Security" class="grid">
+                <flux:sidebar.item :href="route('security.access_card.index')"
+                    :current="request()->routeIs('security.access_card.index')" wire:navigate>
+                    {{ __("Access Card") }}
+                </flux:sidebar.item>
             </flux:sidebar.group>
 
             {{-- Employees --}}

@@ -12,7 +12,6 @@ class Index extends Component
 
     public $search = '';
     public $file;
-
     protected $queryString = ['search'];
 
     public function updatingSearch()
