@@ -5,7 +5,7 @@
             📤 Asset Check Out
         </h1>
         <p class="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-            Enter OPS ID and Asset Code to record Check Out.
+            Enter OPS ID and Asset Code to record Check Out (Peminjaman).
         </p>
     </div>
 
@@ -18,7 +18,7 @@
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="opsId" class="dark:text-white">OPS ID</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" autofocus
+                        <flux:input id="opsId" placeholder="Enter or Scan OPS ID" wire:model.blur="opsId" @keydown.enter.prevent="nextFocus('assetCode')" autofocus
                             autocomplete="off" x-data
                             x-init="$wire.on('focus-ops-id', () => { $el.focus(); $el.select(); })" />
                     </flux:field>
@@ -28,7 +28,7 @@
                         {{-- Label menggunakan Dark Mode Teks --}}
                         <flux:label for="assetCode" class="dark:text-white">ASSET CODE</flux:label>
                         {{-- Diasumsikan flux:input sudah menangani Dark Mode styling untuk inputnya --}}
-                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode"
+                        <flux:input id="assetCode" placeholder="Enter or Scan Asset Code" wire:model.blur="assetCode" @keydown.enter.prevent="nextFocus('opsId')"
                             autocomplete="off" />
                     </flux:field>
                 </div>
@@ -158,7 +158,7 @@
                         </th>
                         <th
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-neutral-300 uppercase tracking-wider">
-                            Transaction Datetime
+                            Check Out Datetime
                         </th>
                     </tr>
                 </thead>
@@ -209,7 +209,7 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-neutral-400">
-                            {{ $transaction->created_at->format('d/m/Y H:i:s') }}
+                            {{ $transaction->check_out->format('d/m/Y H:i:s') }}
                         </td>
                     </tr>
                     @empty
@@ -226,20 +226,10 @@
 </div>
 
 <script>
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.on('start-reset-timer', ({
-            seconds = 10
-        }) => {
-            console.log(`Starting reset timer for ${seconds} seconds...`);
-            setTimeout(() => {
-                @this.dispatch('resetFormNow');
-
-                setTimeout(() => {
-                    document.getElementById('opsId').focus();
-                }, 100);
-            }, seconds * 1000);
-        });
-
-        document.getElementById('opsId').focus();
-    });
+    function nextFocus(nextId){
+        const nextElement = document.getElementById(nextId);
+        if(nextElement){
+            nextElement.focus();
+        }
+    }
 </script>
