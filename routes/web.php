@@ -38,6 +38,10 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
+    Route::prefix('security')->name('security.')->group(function () {
+        Volt::route('access_card', 'access_card.index')->name('access_card.index');
+    });
+
     Route::prefix('employees')->name('employees.')->group(function () {
         Volt::route('/', 'employees.index')->name('index');
     });

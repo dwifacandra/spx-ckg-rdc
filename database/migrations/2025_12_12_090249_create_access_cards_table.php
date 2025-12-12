@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('access_cards', function (Blueprint $table) {
             $table->id();
             $table->string('card_number')->unique();
-            $table->enum('status', ['active', 'inactive', 'lost', 'maintenance'])->default('active');
+            $table->enum('status', ['in use', 'standby', 'lost', 'maintenance'])->default('standby');
             $table->text('remarks')->nullable();
             $table->timestamps();
         });
