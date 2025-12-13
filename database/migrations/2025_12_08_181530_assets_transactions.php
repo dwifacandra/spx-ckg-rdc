@@ -14,11 +14,6 @@ return new class extends Migration
         Schema::create('assets_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('ops_id');
-            $table->foreign('ops_id')
-                ->references('ops_id')
-                ->on('employees')
-                ->cascadeOnDelete()
-                ->name('assets_transactions_ops_id_foreign');
             $table->string('asset_id');
             $table->foreign('asset_id')
                 ->references('code')
