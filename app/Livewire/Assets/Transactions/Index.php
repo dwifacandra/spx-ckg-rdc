@@ -109,7 +109,7 @@ class Index extends Component
     public function render()
     {
         $transactions = AssetTransaction::query()
-            ->with('asset')
+            ->with('asset', 'ops_profile', 'user')
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $q->whereHas('asset', function ($assetQuery) {
@@ -132,7 +132,6 @@ class Index extends Component
                 $query->whereDate('check_out', '<=', $this->checkOutDateFilter);
             })
             ->orderBy($this->sortField, $this->sortDirection)
-            ->with('asset', 'ops_profile', 'user')
             ->paginate(10);
 
         return view('livewire.assets.transactions.index', [
