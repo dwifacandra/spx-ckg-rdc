@@ -165,24 +165,35 @@
                     @forelse ($transactions as $transaction)
                     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700">
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex flex-col">
-                                <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $transaction->ops_id }}
+                            <div class="flex flex-col gap-y-2">
+                                <div class="text-sm text-gray-900 dark:text-white flex gap-2">
+                                    <span
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-white dark:text-gray-300 bg-blue-500 dark:bg-neutral-700">
+                                        {{ $transaction->ops_id }} </span>
+                                    {{ $transaction->ops_profile?->staff_name ?
+                                    ucwords(strtolower($transaction->ops_profile->staff_name)) : 'N/A' }}
                                 </div>
                                 <div>
                                     <span
-                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
-                                        {{ $transaction->ops_profile?->staff_name ?? 'N/A' }} </span>
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-neutral-700">
+                                        {{ $transaction->ops_profile?->contract_type ?? 'N/A' }} </span>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex flex-col space-y-1">
-                                <div class="text-sm text-gray-900 dark:text-white">
-                                    {{ $transaction->asset?->code ?? 'N/A' }} </div>
-                                <div>
+                            <div class="flex flex-col gap-y-2">
+                                <div class="text-sm text-gray-900 dark:text-white flex gap-2">
                                     <span
-                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-white dark:text-gray-300 bg-orange-500 dark:bg-neutral-700">
+                                        {{ $transaction->asset?->item ?? 'N/A' }} </span>
+                                    {{ $transaction->asset?->code ?? 'N/A' }}
+                                </div>
+                                <div class="flex gap-2">
+                                    <span
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-orange-200 dark:bg-neutral-700">
+                                        {{ $transaction->asset?->tag ?? 'N/A' }} </span>
+                                    <span
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-neutral-700">
                                         {{ $transaction->asset?->serial_number ?? 'N/A' }} </span>
                                 </div>
                             </div>
