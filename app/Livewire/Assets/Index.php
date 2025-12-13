@@ -83,6 +83,6 @@ class Index extends Component
             })
             ->paginate(10);
 
-        return view('livewire.assets.index', compact('assets'));
+        return view('livewire.assets.index', compact('assets'))->title('Assets Item');
     }
 }

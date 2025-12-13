@@ -132,11 +132,13 @@ class Index extends Component
                 $query->whereDate('check_out', '<=', $this->checkOutDateFilter);
             })
             ->orderBy($this->sortField, $this->sortDirection)
+            ->with('asset', 'ops_profile', 'user')
             ->paginate(10);
 
         return view('livewire.assets.transactions.index', [
+            'title' => 'Assets Transactions Log',
             'transactions' => $transactions,
             'stats' => $this->getAssetStats()
-        ]);
+        ])->title('Transactions Log');
     }
 }
