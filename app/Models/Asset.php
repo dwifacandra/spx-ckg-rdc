@@ -40,7 +40,7 @@ class Asset extends Model
     public function activeTransaction()
     {
         return $this->transactions()
-            ->where('status', 'in use')
+            ->whereIn('status', ['in use', 'overtime'])
             ->whereNull('check_in')
             ->first();
     }
