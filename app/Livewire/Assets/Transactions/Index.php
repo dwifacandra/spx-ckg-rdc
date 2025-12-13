@@ -98,7 +98,7 @@ class Index extends Component
         $stats['complete']  = $calculateDetails($STATUS_COMPLETE);
         $stats['overdue']   = $calculateDetails($STATUS_OVERTIME);
         $stats['total']     = [
-            'total'     => Asset::count(),
+            'total'     => Asset::wherein('item', [$TYPE_PDA, $TYPE_HT])->count(),
             'pda'       => Asset::where('item', $TYPE_PDA)->count(),
             'ht'        => Asset::where('item', $TYPE_HT)->count(),
         ];

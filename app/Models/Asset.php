@@ -37,6 +37,11 @@ class Asset extends Model
         );
     }
 
+    public function finderRecords()
+    {
+        return $this->hasMany(AssetTracker::class, 'asset_id', 'code');
+    }
+
     public function activeTransaction()
     {
         return $this->transactions()
