@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(AssetTransaction::class, 'created_by');
     }
+
+    public function finderRecords()
+    {
+        return $this->hasMany(AssetTracker::class, 'created_by');
+    }
 }

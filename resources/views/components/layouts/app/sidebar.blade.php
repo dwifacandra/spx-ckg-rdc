@@ -8,19 +8,18 @@
 <body class="min-h-screen bg-white dark:bg-zinc-800">
     <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
-
         <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
             <x-app-logo />
         </a>
-
         <flux:sidebar.nav>
             <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
                 wire:navigate>{{ __("Dashboard") }}</flux:sidebar.item>
-
             {{-- Assets --}}
             <flux:sidebar.group expandable heading="Assets" class="grid">
                 <flux:sidebar.item :href="route('assets.index')" :current="request()->routeIs('assets.index')"
                     wire:navigate>{{ __("Items") }}</flux:sidebar.item>
+                <flux:sidebar.item :href="route('assets.tracker')" :current="request()->routeIs('assets.tracker')"
+                    wire:navigate>{{ __("Tracker") }}</flux:sidebar.item>
                 <flux:sidebar.group expandable heading="Transactions" class="grid">
                     <flux:sidebar.item :href="route('assets.transactions.checkin')"
                         :current="request()->routeIs('assets.transactions.checkin')" wire:navigate>{{ __("Check In") }}
@@ -33,7 +32,6 @@
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.group>
-
             {{-- Security --}}
             <flux:sidebar.group expandable heading="Security" class="grid">
                 <flux:sidebar.item :href="route('security.access_card.index')"
@@ -41,14 +39,11 @@
                     {{ __("Access Card") }}
                 </flux:sidebar.item>
             </flux:sidebar.group>
-
             {{-- Employees --}}
             <flux:sidebar.item icon="users" :href="route('employees.index')"
                 :current="request()->routeIs('employees.index')" wire:navigate>{{ __("Employees") }}</flux:sidebar.item>
         </flux:sidebar.nav>
-
         <flux:spacer />
-
         <!-- Desktop User Menu -->
         <flux:dropdown class="hidden lg:block" position="bottom" align="start">
             <flux:profile :name="auth()->user()->name" :initials="auth()->user()->initials()"
@@ -92,7 +87,6 @@
             </flux:menu>
         </flux:dropdown>
     </flux:sidebar>
-
     <!-- Mobile User Menu -->
     <flux:header class="lg:hidden">
         <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
@@ -140,9 +134,7 @@
             </flux:menu>
         </flux:dropdown>
     </flux:header>
-
     {{ $slot }}
-
     @fluxScripts
 </body>
 
