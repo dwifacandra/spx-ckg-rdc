@@ -137,6 +137,6 @@ class CheckOut extends Component
 
         return view('livewire.assets.transactions.check-out', [
             'recentTransactions' => $recentTransactions
-        ]);
+        ])->title('Asset Check Out');
     }
 }

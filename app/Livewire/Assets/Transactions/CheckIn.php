@@ -225,6 +225,6 @@ class CheckIn extends Component
 
         return view('livewire.assets.transactions.check-in', [
             'recentTransactions' => $recentTransactions
-        ]);
+        ])->title('Asset Check In');
     }
 }

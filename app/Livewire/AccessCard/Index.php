@@ -27,6 +27,6 @@ class Index extends Component
                     ->orWhere('remarks', 'like', '%' . $this->search . '%');
             })
             ->paginate(10);
-        return view('livewire.access-card.index', compact('cards'));
+        return view('livewire.access-card.index', compact('cards'))->title('Access Cards');
     }
 }

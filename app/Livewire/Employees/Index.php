@@ -103,6 +103,6 @@ class Index extends Component
             })
             ->paginate(10);
 
-        return view('livewire.employees.index', compact('employees'));
+        return view('livewire.employees.index', compact('employees'))->title('Employees');
     }
 }

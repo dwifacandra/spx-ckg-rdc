@@ -1,6 +1,5 @@
 <div class="p-6">
     <div class="mb-6">
-        {{-- Header Teks --}}
         <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
             Asset Transactions
         </h1>
@@ -8,7 +7,6 @@
             Track asset check-in and check-out transactions.
         </p>
     </div>
-
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6" wire:poll>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 divide-x divide-slate-200 dark:divide-neutral-700">
             <div class="p-4 text-center">
@@ -74,7 +72,6 @@
 
         </div>
     </div>
-
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg mb-6">
         <div class="p-6">
             <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
@@ -109,7 +106,6 @@
             </div>
         </div>
     </div>
-
     <div class="bg-white dark:bg-neutral-800 shadow-sm rounded-lg overflow-hidden">
         <div class="overflow-x-auto" wire.poll>
             <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700">
@@ -170,28 +166,24 @@
                     <tr class="hover:bg-gray-50 dark:hover:bg-neutral-700">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex flex-col">
-                                <div class="text-sm  text-gray-900 dark:text-white">
+                                <div class="text-sm text-gray-900 dark:text-white">
                                     {{ $transaction->ops_id }}
                                 </div>
                                 <div>
                                     <span
-                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
-                                        {{ $transaction->ops_profile->staff_name }}
-                                    </span>
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->ops_profile?->staff_name ?? 'N/A' }} </span>
                                 </div>
-
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex flex-col space-y-1">
-                                <div class="text-sm  text-gray-900 dark:text-white">
-                                    {{ $transaction->asset->code }}
-                                </div>
+                                <div class="text-sm text-gray-900 dark:text-white">
+                                    {{ $transaction->asset?->code ?? 'N/A' }} </div>
                                 <div>
                                     <span
-                                        class="font-mono text-sm  px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
-                                        {{ $transaction->asset->serial_number }}
-                                    </span>
+                                        class="font-mono text-sm px-2 py-0.5 rounded text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-neutral-700">
+                                        {{ $transaction->asset?->serial_number ?? 'N/A' }} </span>
                                 </div>
                             </div>
                         </td>
@@ -212,7 +204,6 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
                             <div class="flex items-center space-x-2">
                                 <x-icon name="clock" class="w-4 h-4 text-gray-500 dark:text-gray-400" />
-
                                 <span>{{ $transaction->getDurationInHours() }}</span>
                             </div>
                         </td>
@@ -238,8 +229,7 @@
                             {{ $transaction->remarks }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                            {{ $transaction->user->name }}
-                        </td>
+                            {{ $transaction->user?->name ?? 'User Unknown' }} </td>
                     </tr>
                     @empty
                     <tr>
